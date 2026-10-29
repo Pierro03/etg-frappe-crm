@@ -63,6 +63,30 @@ def get_dashboard(from_date: str | None = None, to_date: str | None = None, user
 
 @frappe.whitelist()
 @sales_user_only
+def get_acquisition_summary():
+	"""Return the ETG partner-acquisition funnel for the shared dashboard."""
+	lead_filters = {"source": "Sales Intelligence"}
+	contact_ready = frappe.db.sql(
+		"""
+		SELECT COUNT(*)
+		FROM `tabCRM Lead`
+		WHERE source = %s AND COALESCE(email, '') != ''
+		""",
+		("Sales Intelligence",),
+	)[0][0]
+
+	return {
+		"researched": frappe.db.count("CRM Lead", lead_filters),
+		"contact_ready": contact_ready,
+		"contacted": frappe.db.count("CRM Lead", {**lead_filters, "status": "Contacted"}),
+		"qualified": frappe.db.count("CRM Lead", {**lead_filters, "status": "Qualified"}),
+		"handed_off": frappe.db.count("CRM Lead", {**lead_filters, "status": "Converted"}),
+		"warm": frappe.db.count("CRM Lead", {**lead_filters, "lead_temperature": "Warm"}),
+	}
+
+
+@frappe.whitelist()
+@sales_user_only
 def get_chart(
 	name: str, type: str, from_date: str | None = None, to_date: str | None = None, user: str | None = None
 ):
