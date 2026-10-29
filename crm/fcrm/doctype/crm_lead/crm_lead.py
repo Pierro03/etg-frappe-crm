@@ -94,6 +94,7 @@ class CRMLead(Document):
 		self.set_title()
 		self.validate_email()
 		self.validate_unique_fields()
+		self.set_acquisition_readiness()
 		self.validate_lost_reason()
 		if not self.is_new() and self.has_value_changed("lead_owner") and self.lead_owner:
 			self.share_with_agent(self.lead_owner)
@@ -167,6 +168,51 @@ class CRMLead(Document):
 					_("{0} {1} already exists").format(_(df.label), frappe.bold(value)),
 					frappe.UniqueValidationError,
 				)
+
+	def set_acquisition_readiness(self):
+		"""Score Sales Intelligence leads and enforce approval-aware handoff state."""
+		if self.source != "Sales Intelligence":
+			return
+
+		score = {"High": 30, "Medium": 18, "Low": 8}.get(self.intelligence_confidence, 0)
+		markets = (self.markets_served or "").lower()
+		platform_type = (self.platform_type or "").lower()
+
+		if "global" in markets or "multi-market" in markets:
+			score += 20
+		elif markets:
+			score += 10
+
+		if any(term in platform_type for term in ("connect", "switch", "api", "distribution")):
+			score += 20
+		elif platform_type:
+			score += 12
+
+		if self.no_of_employees:
+			score += 10
+		if (self.source_count or 0) >= 3:
+			score += 10
+		if self.email:
+			score += 10
+
+		self.lead_score = min(score, 100)
+		self.lead_temperature = "Hot" if score >= 70 else "Warm" if score >= 45 else "Cold"
+
+		if self.email and self.outreach_status == "Researching":
+			self.outreach_status = "Contact Ready"
+
+		self.handoff_ready = bool(self.status == "Qualified" and self.email)
+		if self.handoff_ready and self.sales_handoff_status == "Not Ready":
+			self.sales_handoff_status = "Ready for Review"
+
+		if self.outreach_status == "Sent":
+			if not self.email:
+				frappe.throw(_("Add a verified email before marking outreach as sent."))
+			if not self.outreach_approved:
+				frappe.throw(_("Approve outreach before marking it as sent."))
+
+		if self.sales_handoff_status == "Accepted" and not self.handoff_ready:
+			frappe.throw(_("Qualify the lead and add a verified email before Sales accepts the handoff."))
 
 	def validate_lost_reason(self):
 		"""

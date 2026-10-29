@@ -68,7 +68,7 @@
         <div class="route-meta">
           <span>{{ __('ETG distribution route') }}</span>
           <span v-if="acquisitionSummary.data">
-            {{ acquisitionSummary.data.warm || 0 }} {{ __('warm signals') }}
+            {{ acquisitionSummary.data.priority || 0 }} {{ __('priority signals') }}
           </span>
         </div>
         <div class="route-track">

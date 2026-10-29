@@ -45,6 +45,19 @@
   "converted",
   "lead_score",
   "lead_temperature",
+  "intelligence_tab",
+  "intelligence_confidence",
+  "platform_type",
+  "markets_served",
+  "source_count",
+  "research_sources",
+  "outreach_section",
+  "outreach_status",
+  "outreach_approved",
+  "column_break_outreach",
+  "sales_handoff_status",
+  "handoff_ready",
+  "qualification_notes",
   "products_tab",
   "products",
   "section_break_ggwh",
@@ -238,6 +251,86 @@
    "in_standard_filter": 1,
    "label": "Lead Temperature",
    "options": "\nCold\nWarm\nHot"
+  },
+  {
+   "fieldname": "intelligence_tab",
+   "fieldtype": "Tab Break",
+   "label": "Acquisition Intelligence"
+  },
+  {
+   "fieldname": "intelligence_confidence",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Research Confidence",
+   "options": "\nLow\nMedium\nHigh"
+  },
+  {
+   "fieldname": "platform_type",
+   "fieldtype": "Data",
+   "in_standard_filter": 1,
+   "label": "Travel Platform Type"
+  },
+  {
+   "fieldname": "markets_served",
+   "fieldtype": "Small Text",
+   "label": "Markets Served"
+  },
+  {
+   "default": "0",
+   "fieldname": "source_count",
+   "fieldtype": "Int",
+   "label": "Research Source Count",
+   "read_only": 1
+  },
+  {
+   "fieldname": "research_sources",
+   "fieldtype": "Long Text",
+   "label": "Research Sources",
+   "read_only": 1
+  },
+  {
+   "fieldname": "outreach_section",
+   "fieldtype": "Section Break",
+   "label": "Outreach and Sales Handoff"
+  },
+  {
+   "default": "Researching",
+   "fieldname": "outreach_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Outreach Status",
+   "options": "Researching\nContact Ready\nDraft Ready\nApproved\nSent\nReplied\nPaused"
+  },
+  {
+   "default": "0",
+   "description": "A person must approve outreach before any message can be sent.",
+   "fieldname": "outreach_approved",
+   "fieldtype": "Check",
+   "label": "Outreach Approved"
+  },
+  {
+   "fieldname": "column_break_outreach",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Not Ready",
+   "fieldname": "sales_handoff_status",
+   "fieldtype": "Select",
+   "in_standard_filter": 1,
+   "label": "Sales Handoff",
+   "options": "Not Ready\nReady for Review\nAccepted\nReturned"
+  },
+  {
+   "default": "0",
+   "fieldname": "handoff_ready",
+   "fieldtype": "Check",
+   "label": "Handoff Ready",
+   "read_only": 1
+  },
+  {
+   "fieldname": "qualification_notes",
+   "fieldtype": "Small Text",
+   "label": "Qualification Notes"
   },
   {
    "fieldname": "person_tab",

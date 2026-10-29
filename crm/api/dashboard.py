@@ -82,6 +82,9 @@ def get_acquisition_summary():
 		"qualified": frappe.db.count("CRM Lead", {**lead_filters, "status": "Qualified"}),
 		"handed_off": frappe.db.count("CRM Lead", {**lead_filters, "status": "Converted"}),
 		"warm": frappe.db.count("CRM Lead", {**lead_filters, "lead_temperature": "Warm"}),
+		"priority": frappe.db.count(
+			"CRM Lead", {**lead_filters, "lead_temperature": ["in", ["Warm", "Hot"]]}
+		),
 	}
 
 
