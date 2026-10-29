@@ -12,6 +12,12 @@ bench init --skip-redis-config-generation frappe-bench --version version-15
 
 cd frappe-bench
 
+# The development MariaDB container does not provide TLS.
+cat > /home/frappe/.my.cnf <<'EOF'
+[client]
+skip-ssl
+EOF
+
 # Use containers instead of localhost
 bench set-mariadb-host mariadb
 bench set-redis-cache-host redis://redis:6379
